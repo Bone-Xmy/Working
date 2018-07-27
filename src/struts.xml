@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE struts PUBLIC "-/Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+	<constant name="struts.i18n.encoding" value="utf-8"/>
+	<package name="saasTools" extends="struts-default">
+		<!-- 定义拦截器 -->
+		<interceptors>
+			<!-- 定义一个名为authroigy的拦截器 -->
+			<interceptor name="authority" class="org.saas.app.interceptor.AuthorityInterceptor"/>
+		</interceptors>
+
+		<!-- 定义全局Result -->
+		<global-results>
+			<!-- 当返回login视图名时，转入loginForm.jsp页面 -->
+			<result name="login">/WEB-INF/content/loginForm.jsp</result>
+		</global-results>
+
+		<action name="login" class="org.saas.app.action.LoginAction">
+			<result name="error">/WEB-INF/content/error.jsp</result>
+			<result>/WEB-INF/content/welcome.jsp</result>
+		</action>
+		<!-- 定义一个名为viewBook的Action，其实现类为为org.saas.app.action.showReportsAction -->
+		<action name="showReports" class="org.saas.app.action.ShowReportsAction">
+			<!-- 返回success视图名时，转入viewBook.jsp页面 -->
+			<result>/WEB-INF/content/myReports.jsp</result>
+			<!-- 如果为Action指定了一个拦截器，则系统默认的拦截器将会失去作用，为了继续使用默认拦截器，需要显式配置-->
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
+		</action>
+		<!-- 定义一个名为upload的action -->
+		<action name="upload" class="org.saas.app.action.UploadAction">
+			<!-- 动态设置Action的属性值 -->
+			<param name="savePath">/uploadFiles</param>
+			<!-- 配置Struts 2默认的视图页面 -->
+			<result>/WEB-INF/content/upsucc.jsp</result>
+		</action>
+		<action name="*">
+			<result>/WEB-INF/content/{1}.jsp</result>
+		</action>
+	</package>
+</struts>
