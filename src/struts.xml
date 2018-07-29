@@ -4,6 +4,7 @@
 <struts>
 	<constant name="struts.i18n.encoding" value="utf-8"/>
 	<package name="saasTools" extends="struts-default">
+		<!-- 有全局的拦截器吗?（2018.07.29 bone） -->
 		<!-- 定义拦截器 -->
 		<interceptors>
 			<!-- 定义一个名为authroigy的拦截器 -->
@@ -35,6 +36,10 @@
 			<param name="savePath">/Users/bone/myWork/uploadFiles</param>
 			<!-- 配置Struts 2默认的视图页面 -->
 			<result>/WEB-INF/content/upsucc.jsp</result>
+		</action>
+		<!-- 定义一个名为checkoutSetFood的action -->
+		<action name="checkoutSetFood" class="org.saas.app.action.CheckSetFoodAction">
+			<result>/WEB-INF/content/checkoutSetFood.jsp</result>
 		</action>
 		<action name="*">
 			<result>/WEB-INF/content/{1}.jsp</result>

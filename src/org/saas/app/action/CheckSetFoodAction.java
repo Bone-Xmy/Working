@@ -14,7 +14,7 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.*;
 
-public class checkSetFoodAction extends ActionSupport{
+public class CheckSetFoodAction extends ActionSupport{
 	//List<String> titleList = new ArrayList<>(); //表头直接在jsp里面通过list实现
 	List<List<String>> foodDetailList = new ArrayList<>();
 

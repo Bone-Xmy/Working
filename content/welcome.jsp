@@ -44,6 +44,9 @@
 		<s:textfield name="orderLogs" label="操作日志"/>
 		<s:submit value="日志查询"/>
 	</s:form>
+	<s:form action="checkSetFood">
+		<s:submit value="检查套餐明细">
+	<s:form>
 	<s:form action="upload" enctype="multipart/form-data">
 		<s:textfield name="title" label="文件标题"/>
 		<!-- 生成一个文件上传域 -->
