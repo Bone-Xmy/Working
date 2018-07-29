@@ -36,7 +36,8 @@
 	<s:form action="showReports">
 		<s:textfield name="startDate" label="开始日期"/>
 		<s:textfield name="endDate" label="结束日期"/><br/>
-		<s:textfield name="checkTypes" label="异常类型"/>
+		<s:select name="checkTypes" label="异常类型" labelposition="right"
+			list="{'流水<>实收+优惠','流水<>支付科目明细之和','流水<>菜品销售金额合计','实收<>实收科目合计','实收<>菜品实收金额合计','会员储值明细','综合营业报表账单明细','综合营业报表支付明细','综合营业报表菜品明细'}"/>
 		<s:submit value="查询"/>
 	</s:form>
 	<s:form action="showLogs">
