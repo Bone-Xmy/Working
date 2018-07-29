@@ -1,3 +1,4 @@
+package org.saas.app.action;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
@@ -56,7 +57,7 @@ public class UploadAction extends ActionSupport{
 	@Override
 	public String execute() throws Exception{
 		//以服务器的文件保存地址和原文件名建议上传文件输出流
-		FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
+		FileOutputStream fos = new FileOutputStream("/Users/bone/myWork/uploadFiles/text.txt");
 		FileInputStream fis = new FileInputStream(getUpload());
 		byte[] buffer = new byte[1024];
 		int len = 0;

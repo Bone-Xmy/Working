@@ -32,7 +32,7 @@
 		<!-- 定义一个名为upload的action -->
 		<action name="upload" class="org.saas.app.action.UploadAction">
 			<!-- 动态设置Action的属性值 -->
-			<param name="savePath">/uploadFiles</param>
+			<param name="savePath">/Users/bone/myWork/uploadFiles</param>
 			<!-- 配置Struts 2默认的视图页面 -->
 			<result>/WEB-INF/content/upsucc.jsp</result>
 		</action>
