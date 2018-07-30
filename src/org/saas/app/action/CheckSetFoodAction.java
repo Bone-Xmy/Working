@@ -74,7 +74,7 @@ public class CheckSetFoodAction extends ActionSupport{
 								}
 							}
 							foodDetailList.add(resultDesc);
-							System.out.println(foodDetailList);
+							//System.out.println(foodDetailList);
 						}
 					}
 				}
