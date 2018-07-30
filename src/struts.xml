@@ -38,8 +38,8 @@
 			<result>/WEB-INF/content/upsucc.jsp</result>
 		</action>
 		<!-- 定义一个名为checkoutSetFood的action -->
-		<action name="checkoutSetFood" class="org.saas.app.action.CheckSetFoodAction">
-			<result>/WEB-INF/content/checkoutSetFood.jsp</result>
+		<action name="checkSetFood" class="org.saas.app.action.CheckSetFoodAction">
+			<result>/WEB-INF/content/checkSetFood.jsp</result>
 		</action>
 		<action name="*">
 			<result>/WEB-INF/content/{1}.jsp</result>
