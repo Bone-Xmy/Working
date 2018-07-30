@@ -63,6 +63,7 @@ public class CheckSetFoodAction extends ActionSupport{
 									resultDesc.add(SFDetailName);
 									resultDesc.add(setfoodkey);
 									resultDesc.add("是");
+									foodDetailList.add(resultDesc);
 									//System.out.println("套餐" + foodName + "的明细菜品：" + SFDetailName + "缺失对应的单菜品，菜品的key为：" + setfoodkey + ",有同名的单菜品，但是foodKey不一致！！");
 								}
 								else{
@@ -70,10 +71,10 @@ public class CheckSetFoodAction extends ActionSupport{
 									resultDesc.add(SFDetailName);
 									resultDesc.add(setfoodkey);
 									resultDesc.add("否");
+									foodDetailList.add(resultDesc);
 									//System.out.println("套餐" + foodName + "的明细菜品：" + SFDetailName + "缺失对应的单菜品，菜品的key为：" + setfoodkey);
 								}
 							}
-							foodDetailList.add(resultDesc);
 							//System.out.println(foodDetailList);
 						}
 					}
