@@ -14,6 +14,12 @@
 			display:flex;
 			flex-direction:row;
 		}
+		div#start,div#end,div#checks{
+			width: 300px;
+			height: 40px;
+			/*display为inline的盒模型不会占据一行，即允许一行出现多个元素  */
+			display:inline;
+		}
 		div>div {
 			border:1px solid #aaf;
 			width:200px;
@@ -34,11 +40,19 @@
 <div id="choose">
 	选择条件:<br/>
 	<s:form action="showReports">
-		<s:textfield name="startDate" label="开始日期"/>
-		<s:textfield name="endDate" label="结束日期"/><br/>
-		<s:select name="checkTypes" label="异常类型" labelposition="right"
-			list="{'流水<>实收+优惠','流水<>支付科目明细之和','流水<>菜品销售金额合计','实收<>实收科目合计','实收<>菜品实收金额合计','会员储值明细','综合营业报表账单明细','综合营业报表支付明细','综合营业报表菜品明细'}"/>
-		<s:submit value="查询"/>
+		<div id="start">
+			<s:textfield name="startDate" label="开始日期"/>
+			<s:textfield name="startTime" label="开始时间"/>
+		</div>
+		<div id="end">
+			<s:textfield name="endDate" label="结束日期"/>
+			<s:textfield name="endTime" label="结束时间"/>
+		</div>
+		<div id="checks">
+			<s:select name="checkTypes" label="异常类型" labelposition="right"
+				list="{'流水<>实收+优惠','流水<>支付科目明细之和','流水<>菜品销售金额合计','实收<>实收科目合计','实收<>菜品实收金额合计','会员储值明细','综合营业报表账单明细','综合营业报表支付明细','综合营业报表菜品明细'}"/>
+			<s:submit value="查询"/>
+		</div>
 	</s:form>
 	<s:form action="showLogs">
 		<s:textfield name="orderLogs" label="操作日志"/>
