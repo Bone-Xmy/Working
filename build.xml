@@ -7,7 +7,10 @@
 <property name="dest" value="dest"/>
 <property name="content" value="content"/>
 <property name="lib" value="lib"/>
-<property name="webapps" value="F:/Study/apache-tomcat-8.5.29/webapps"/>
+<!-- windows下的路径 -->
+<!-- property name="webapps" value="F:/Study/apache-tomcat-8.5.29/webapps" -->
+<!-- mac下的路径 -->
+<property name="webapps" value="/Users/bone/Library/apacheTomcat8529/webapps"/>
 <!-- 定义一组文件和路径集 -->
 <path id="classpath">
 <!-- pathelement:用于指定一个或多个目录。可以指定如下两个属性中的一个：path:指定一个或者多个目录（或者jar文件）,多个目录或jar文件中间以英文冒号或英文分号分开；location：指定一个目录和jar文件 -->

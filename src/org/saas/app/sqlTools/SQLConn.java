@@ -20,9 +20,9 @@ public class SQLConn{
 		//conn = DriverManager.getConnection(url,user,pass);
 		Class.forName("org.sqlite.JDBC");
 		//conn for linux
-		//conn = DriverManager.getConnection("jdbc:sqlite:/Users/bone/myWork/source/hlldata.dll");
+		conn = DriverManager.getConnection("jdbc:sqlite:/Users/bone/myWork/source/hlldata.dll");
 		//conn for Win
-		conn = DriverManager.getConnection("jdbc:sqlite:F:\\Study\\saasWeb\\0716\\test\\hlldata.dll");
+		//conn = DriverManager.getConnection("jdbc:sqlite:F:\\Study\\saasWeb\\0716\\test\\hlldata.dll");
 	}
 
 	//获得连接对象
