@@ -59,7 +59,7 @@
 	<s:form action="showReports">
 		<s:submit value="查询"/>
 	<!-- s:property value="[0].rsList"/ -->
-	<s:property value="[0].foodDetailList"/>
+	<!-- s:property value="[0].foodDetailList"/-->
 	</s:form>
 	<table border="1">
 		<tr>
