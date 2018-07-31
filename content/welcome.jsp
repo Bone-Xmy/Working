@@ -14,7 +14,7 @@
 			display:flex;
 			flex-direction:row;
 		}
-		div#start,div#end,div#checks{
+		div#start>textfield,div#end,div#checks{
 			width: 300px;
 			height: 40px;
 			/*display为inline的盒模型不会占据一行，即允许一行出现多个元素  */

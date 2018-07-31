@@ -5,6 +5,7 @@
 <property name="src" value="src"/>
 <property name="classes" value="classes"/>
 <property name="dest" value="dest"/>
+<property name="content" value="content"/>
 <property name="lib" value="lib"/>
 <property name="webapps" value="F:/Study/apache-tomcat-8.5.29/webapps"/>
 <!-- 定义一组文件和路径集 -->
@@ -77,11 +78,26 @@
 </target>
 <!-- 部署web （还不可用） -->
 <target name="apply" description="部署到服务器">
-	<!-- 将src里面的文件复制到apache webapp对应的路径下 -->
-	<copy todir="${webapps}/saasTools/WEB-INF/">
-		<fileset dir="${classes}"/>
+	<!-- 将src里面的classes文件复制到apache webapp对应的路径下,可以使用includeEmptyDirs 指定是否包含空目录 -->
+	<copy todir="${webapps}/saasTools/WEB-INF">
+		<!-- 复制目录下的所有文件，包含目录本身 -->
+		<fileset dir=".">
+			<!-- "${classes}" 则只会拷贝名为${classes}的空目录过去，里面的文件和子目录则不会拷贝，
+				"${classse}/" 或 "${classe}/**" 会把整个目录classes目录拷贝过去，包括里面的文件和子目录，
+				"${classes}/*" ，则只会把该目录和该目录下第一级子目录的所有东西拷贝过去，而不会拷贝第二级和以下级的东西，
+				若星号大于两个和一个是一样的效果 -->
+			<include name="${classes}"/>
+			<include name="${classes}/**"/>
+		</fileset>
 	</copy>
-	<copy todir="${webapps}/saasTools/WEB-INF/classes/">
+	<copy todir="${webapps}/saasTools/WEB-INF">
+		<!-- 复制目录下的所有文件，包含目录本身 -->
+		<fileset dir=".">
+			<include name="${content}"/>
+			<include name="${content}/**"/>
+		</fileset>
+	</copy>
+	<copy todir="${webapps}/saasTools/WEB-INF/classes">
 		<fileset dir="${src}">
 			<include name="struts.xml"/>
 		</fileset>
