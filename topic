@@ -1,0 +1,2 @@
+1.在调用get方法的时候为啥可以不指定调用者
+    eg:ShowReportsAction.java里面获取日期的地方

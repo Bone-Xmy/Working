@@ -49,6 +49,8 @@
 		结束日期：<input name="endDate" type="text"/>
 		结束时间：<input name="endTime" type="text"/>
 		<br/>
+		<button type="submit">查询</button>
+		<br/>
 		异常类型：
 		<select name="checkTypes">
 			<option>流水<>实收+优惠</option>
