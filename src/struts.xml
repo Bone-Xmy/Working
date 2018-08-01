@@ -3,6 +3,8 @@
 	"http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
 	<constant name="struts.i18n.encoding" value="utf-8"/>
+	<!-- 指定上传文件中允许的整个文件的最大字节数（1M = 1048576 字节） -->
+	<constant name="struts.multipart.maxSize" value="104857600"/>
 	<package name="saasTools" extends="struts-default">
 		<!-- 有全局的拦截器吗?（2018.07.29 bone） -->
 		<!-- 定义拦截器 -->
@@ -36,6 +38,7 @@
 			<param name="savePath">/Users/bone/myWork/uploadFiles</param>
 			<!-- 配置Struts 2默认的视图页面 -->
 			<result>/WEB-INF/content/upsucc.jsp</result>
+			<result name="error">/WEB-INF/content/error.jsp</result>
 		</action>
 		<!-- 定义一个名为checkoutSetFood的action -->
 		<action name="checkSetFood" class="org.saas.app.action.CheckSetFoodAction">

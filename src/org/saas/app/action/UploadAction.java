@@ -1,10 +1,15 @@
 package org.saas.app.action;
+
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionSupport;
+import com.opensymphony.xwork2.ActionContext;
+
 import org.apache.struts2.ServletActionContext;
 
 import java.io.File;
 import java.io.*;
+
+import java.util.*;
 
 public class UploadAction extends ActionSupport{
 	//封装文件标题请求参数的成员变量
@@ -58,13 +63,26 @@ public class UploadAction extends ActionSupport{
 	public String execute() throws Exception{
 		//以服务器的文件保存地址和原文件名建议上传文件输出流
 		////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
-		FileOutputStream fos = new FileOutputStream("/Users/bone/myWork/uploadFiles/text.txt");
+		String uploadedDir = "/Users/bone/myWork/source/hlldata.dll";
+		FileOutputStream fos = new FileOutputStream(uploadedDir);
 		FileInputStream fis = new FileInputStream(getUpload());
 		byte[] buffer = new byte[1024];
 		int len = 0;
-		while((len = fis.read(buffer)) > 0){
-			fos.write(buffer,0,len);
+		try{
+			while((len = fis.read(buffer)) > 0){
+				fos.write(buffer,0,len);
+			}
+			//获取ActionContext
+			ActionContext ctx = ActionContext.getContext();
+			Map<String,Object> session = ctx.getSession();
+			session.put("uploaded",uploadedDir);
+
+			return SUCCESS;
 		}
-		return SUCCESS;
+		catch (Exception e){
+			e.printStackTrace();
+			return ERROR;
+		}
+		
 	}
 }

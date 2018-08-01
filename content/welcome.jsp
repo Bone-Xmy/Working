@@ -59,10 +59,10 @@
 			<option>实收<>实收科目合计</option>
 			<option>实收<>菜品实收金额合计</option>
 			<option>会员储值明细</option>
-			<option>综合营业报表账单明细'</option>
+			<option>综合营业报表账单明细</option>
 			<option>综合营业报表支付明细</option>
 			<option>综合营业报表菜品明细</option>
-		</select!-- >
+		</select>
 			<!-- s:select name="checkTypes" label="异常类型" labelposition="right"
 				list="{'流水<>实收+优惠','流水<>支付科目明细之和','流水<>菜品销售金额合计','实收<>实收科目合计','实收<>菜品实收金额合计','会员储值明细','综合营业报表账单明细','综合营业报表支付明细','综合营业报表菜品明细'}"/ -->
 		<button type="submit">查询</button>

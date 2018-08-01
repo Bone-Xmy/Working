@@ -31,7 +31,11 @@ public class CheckSetFoodAction extends ActionSupport{
 		ArrayList<String> foodNames = new ArrayList<>();
 
 		try{
-			JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
+			//for windows 
+			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
+			
+			//for windows 
+			JsonObject json = (JsonObject)parse.parse(new FileReader("/Users/bone/Study/JavaEE/SaaS/saasJson/src/foodLst.cdata"));
 			
 			JsonArray array = json.get("data").getAsJsonObject().get("records").getAsJsonArray(); //获取foodLst数组
 			//维护foodKeys

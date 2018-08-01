@@ -1,2 +1,8 @@
 1.在调用get方法的时候为啥可以不指定调用者
     eg:ShowReportsAction.java里面获取日期的地方
+2.if(((String)session.get("user")) != null)
+	为什么 != 可以编译，而 = 就编译失败？
+	eg:SQLConn
+
+3.为什么UploadAction.java上传失败没有到error.jsp页面？
+
