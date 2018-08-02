@@ -11,6 +11,8 @@ import java.io.*;
 
 import java.util.*;
 
+import org.saas.app.Tools.MyDir;
+
 public class UploadAction extends ActionSupport{
 	//封装文件标题请求参数的成员变量
 	private String title;
@@ -63,8 +65,8 @@ public class UploadAction extends ActionSupport{
 	public String execute() throws Exception{
 		//以服务器的文件保存地址和原文件名建议上传文件输出流
 		////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
-		String uploadedDir = "/Users/bone/myWork/source/hlldata.dll";
-		FileOutputStream fos = new FileOutputStream(uploadedDir);
+		String uploadedFile = new MyDir().getDir() + "/" + getUploadFileName();
+		FileOutputStream fos = new FileOutputStream(uploadedFile);
 		FileInputStream fis = new FileInputStream(getUpload());
 		byte[] buffer = new byte[1024];
 		int len = 0;
@@ -75,7 +77,7 @@ public class UploadAction extends ActionSupport{
 			//获取ActionContext
 			ActionContext ctx = ActionContext.getContext();
 			Map<String,Object> session = ctx.getSession();
-			session.put("uploaded",uploadedDir);
+			session.put("uploaded",uploadedFile);
 
 			return SUCCESS;
 		}

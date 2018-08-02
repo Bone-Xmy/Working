@@ -34,7 +34,6 @@ public class SQLConn{
 		//如果还未登陆，需要线连接到登陆的数据库
 		if(((String)session.get("user")) != null){
 			sqlFile = (String)session.get("uploaded");
-			//sqlFile = "/Users/bone/myWork/source/hlldata.dll";
 		}
 		else{
 			sqlFile = "/Users/bone/myWork/source/hlldata.dll";
