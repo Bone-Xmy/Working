@@ -33,7 +33,7 @@ public class CheckSetFoodAction extends ActionSupport{
 		try{
 			//for windows 
 			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
-			
+			//String foodFile = (String)session.getAttribute("uploadedFile");
 			//for windows 
 			JsonObject json = (JsonObject)parse.parse(new FileReader("/Users/bone/Study/JavaEE/SaaS/saasJson/src/foodLst.cdata"));
 			

@@ -31,8 +31,9 @@ public class SQLConn{
 		//获取ActionContext
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> session = ctx.getSession();
-		//如果还未登陆，需要线连接到登陆的数据库
-		if(((String)session.get("user")) != null){
+		//如果还未登录或者没有上传数据，需要线连接到登陆的数据库
+		//如果已经登录并且上传数据了，则连接上传的数据库
+		if(((String)session.get("user")) != null && ((String)session.get("uploaded")) != null){
 			sqlFile = (String)session.get("uploaded");
 		}
 		else{
