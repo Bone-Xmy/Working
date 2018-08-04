@@ -63,6 +63,7 @@ public class UploadAction extends ActionSupport{
 
 	@Override
 	public String execute() throws Exception{
+		//如何保证三个文件上传到同一个路径下呢？（session里面获取uploaded的value?）
 		//以服务器的文件保存地址和原文件名建议上传文件输出流
 		////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
 		String uploadedFile = new MyDir().getDir() + "/" + getUploadFileName();
@@ -74,10 +75,16 @@ public class UploadAction extends ActionSupport{
 			while((len = fis.read(buffer)) > 0){
 				fos.write(buffer,0,len);
 			}
+
 			//获取ActionContext
 			ActionContext ctx = ActionContext.getContext();
 			Map<String,Object> session = ctx.getSession();
-			session.put("uploaded",uploadedFile);
+			if(getUploadFileName().startsWith("hll")){
+				session.put("uploaded",uploadedFile);
+			}
+			else if(getUploadFileName().startsWith("Food")){
+				session.put("uploadedFoodLst",uploadedFile);
+			}
 
 			return SUCCESS;
 		}

@@ -8,6 +8,12 @@
 </head>
 <body>
 	上传成功!
+<s:form>
+	<div>
+		文件类型为：
+	</div>
+	<s:property value="[0].uploadContentType"/>
+</s:form>
 </body>
 </html>
 

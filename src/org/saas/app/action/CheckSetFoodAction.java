@@ -5,6 +5,7 @@ import com.opensymphony.xwork2.ActionSupport;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
  
+import com.opensymphony.xwork2.ActionContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonIOException;
@@ -33,9 +34,10 @@ public class CheckSetFoodAction extends ActionSupport{
 		try{
 			//for windows 
 			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
-			//String foodFile = (String)session.getAttribute("uploadedFile");
-			//for windows 
-			JsonObject json = (JsonObject)parse.parse(new FileReader("/Users/bone/Study/JavaEE/SaaS/saasJson/src/foodLst.cdata"));
+			ActionContext ctx = ActionContext.getContext();
+			Map<String,Object> session = ctx.getSession();
+			String foodFile = (String)session.get("uploadedFoodLst");
+			JsonObject json = (JsonObject)parse.parse(new FileReader(foodFile));
 			
 			JsonArray array = json.get("data").getAsJsonObject().get("records").getAsJsonArray(); //获取foodLst数组
 			//维护foodKeys
