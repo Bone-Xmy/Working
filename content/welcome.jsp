@@ -31,9 +31,8 @@
 <div>您已经登录!</div>
 <hr/>
 <div id="toolKinds">
-	<div>报表对账</div>
-	<div>修复异常数据</div>
-	<div>sss3</div>
+	<div id="r1" onclick="reports();">报表对账</div>
+	<div id="r2" onclick="repaired();">修复异常数据</div>
 </div>
 <br/>
 <hr/>
@@ -80,13 +79,31 @@
 		<button type="submit">检查套餐明细</button>
 	</s:form>
 	<s:form action="upload" enctype="multipart/form-data">
-		<s:textfield name="title" label="文件标题"/>
+		<!-- s:textfield name="title" label="文件标题" --/>
 		<!-- 生成一个文件上传域 -->
 		<s:file name="upload" label="选择文件"/>
 		<s:submit value="上传"/>
 	</s:form>
 </div>
 <hr/>
+<script type="text/javascript">
+	function reports(){
+		//获取第一个div元素
+		targetOne = document.getElementById("r1");
+		console.log("clicked1p");
+		//动态修改表单的action属性
+		targetOne.action = "firstPage";
+		console.log("clicked1pp");
+	}
+	function repaired(){
+		//获取第二个div元素
+		targetTwo = document.getElementById("r2");
+		console.log("clicked2p");
+		//动态修改表单的action属性
+		targetTwo.action = "secondPage";
+		console.log("clicked2pp");
+	}
+</script>
 </body>
 </html>
 

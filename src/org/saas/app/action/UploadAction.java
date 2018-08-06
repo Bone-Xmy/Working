@@ -64,9 +64,21 @@ public class UploadAction extends ActionSupport{
 	@Override
 	public String execute() throws Exception{
 		//如何保证三个文件上传到同一个路径下呢？（session里面获取uploaded的value?）
-		//以服务器的文件保存地址和原文件名建议上传文件输出流
-		////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
-		String uploadedFile = new MyDir().getDir() + "/" + getUploadFileName();
+
+		//获取ActionContext
+		ActionContext ctx = ActionContext.getContext();
+		Map<String,Object> session = ctx.getSession();
+		String uploadedFile;
+
+		if((String)session.get("uploaded") != null){
+			//hlldata和foodLst可能上传到同一个路径，也可能不同，暂时不考虑
+			uploadedFile = (String)session.get("uploaded");
+		}
+		else{
+			//以服务器的文件保存地址和原文件名建议上传文件输出流
+			////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
+			uploadedFile = new MyDir().getDir() + "/" + getUploadFileName();
+		}
 		FileOutputStream fos = new FileOutputStream(uploadedFile);
 		FileInputStream fis = new FileInputStream(getUpload());
 		byte[] buffer = new byte[1024];
@@ -76,9 +88,6 @@ public class UploadAction extends ActionSupport{
 				fos.write(buffer,0,len);
 			}
 
-			//获取ActionContext
-			ActionContext ctx = ActionContext.getContext();
-			Map<String,Object> session = ctx.getSession();
 			if(getUploadFileName().startsWith("hll")){
 				session.put("uploaded",uploadedFile);
 			}
