@@ -30,10 +30,12 @@
 <body>
 <div>您已经登录!</div>
 <hr/>
+<form action="pageDispatch" method="post">
 <div id="toolKinds">
-	<div id="r1" onclick="reports();">报表对账</div>
-	<div id="r2" onclick="repaired();">修复异常数据</div>
+	<div id="r1" onclick="getFirstPage();">报表对账</div>
+	<div id="r2" onclick="getSecondPage();">修复异常数据</div>
 </div>
+</form>
 <br/>
 <hr/>
 <div id="choose">
@@ -92,7 +94,7 @@
 		targetOne = document.getElementById("r1");
 		console.log("clicked1p");
 		//动态修改表单的action属性
-		targetOne.action = "firstPage";
+		targetOne.action = "getFirstPage";
 		console.log("clicked1pp");
 	}
 	function repaired(){
@@ -100,7 +102,7 @@
 		targetTwo = document.getElementById("r2");
 		console.log("clicked2p");
 		//动态修改表单的action属性
-		targetTwo.action = "secondPage";
+		targetTwo.action = "getSecondPage";
 		console.log("clicked2pp");
 	}
 </script>
