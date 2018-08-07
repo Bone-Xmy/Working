@@ -27,7 +27,7 @@
 		<action name="pageDispatch" class="org.saas.app.action.PageDispatchAction">
 			<result>/WEB-INF/content/welcome.jsp</result>
 		</action>
-		<actoin name="getSecondPage" class="org.saas.app.action.PageDispatchAction" method="getSecondPage">
+		<action name="getSecondPage" class="org.saas.app.action.PageDispatchAction" method="getSecondPage">
 			<result name="input">/WEB-INF/content/exRepaired.jsp</result>
 		</action>
 		<!-- 定义一个名为viewBook的Action，其实现类为为org.saas.app.action.showReportsAction -->

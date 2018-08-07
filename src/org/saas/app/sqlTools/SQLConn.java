@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import com.opensymphony.xwork2.ActionContext;
+import org.apache.struts2.ServletActionContext;
 
 import java.util.*;
 
@@ -33,11 +34,17 @@ public class SQLConn{
 		Map<String,Object> session = ctx.getSession();
 		//如果还未登录或者没有上传数据，需要线连接到登陆的数据库
 		//如果已经登录并且上传数据了，则连接上传的数据库
-		if(((String)session.get("user")) != null && ((String)session.get("uploaded")) != null){
-			sqlFile = (String)session.get("uploaded");
+		if(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null){
+			sqlFile = (String)session.get("uploadDir");
 		}
 		else{
-			sqlFile = "/Users/bone/myWork/source/hlldata.dll";
+			if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){
+				sqlFile = "/Users/bone/myWork/source/hlldata.dll";
+			}
+			else{
+				sqlFile = "F:/xxx";
+			}
+			
 		}
 		String connSQLFile = "jdbc:sqlite:" + sqlFile;
 		//连接
