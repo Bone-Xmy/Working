@@ -14,7 +14,7 @@ public class MyDir{
 			newFile = new File("/Users/bone/myWork/source/" + new MyUUID().getUUID());
 		}
 		else{
-			newFile = new File("F:/xxx");
+			newFile = new File("E:/source/" + new MyUUID().getUUID());
 		}
 		//在/Users/bone/myWork/source/下创建一个以UUID为名称的文件,此时只有File对象，不会创建文件
 		//File  newFile = new File("/Users/bone/myWork/source/" + new MyUUID().getUUID());
