@@ -64,7 +64,6 @@ public class UploadAction extends ActionSupport{
 
 	@Override
 	public String execute() throws Exception{
-		Journal journal = new Journal();
 		//如何保证三个文件上传到同一个路径下呢？（session里面获取uploaded的value?）
 
 		//获取ActionContext
@@ -76,7 +75,7 @@ public class UploadAction extends ActionSupport{
 
 		if((String)session.get("uploadDir") != null){
 			//hlldata和foodLst可能上传到同一个路径，也可能不同，暂时不考虑
-			journal.writeLog("session信息为：" + (String)session.get("uploadDir"));
+			Journal.writeLog("session信息为：" + (String)session.get("uploadDir"));
 			uploadDir = (String)session.get("uploadDir");
 			uploadedFile = uploadDir + "/" + getUploadFileName();
 		}
@@ -96,9 +95,9 @@ public class UploadAction extends ActionSupport{
 			}
 
 			if(getUploadFileName().startsWith("hll")){
-				journal.writeLog("上传成功！");
+				Journal.writeLog("上传成功！");
 				session.put("uploadDir",uploadDir);
-				journal.writeLog("上传后的session为：" + (String)session.get("uploadDir"));
+				Journal.writeLog("上传后的session为：" + (String)session.get("uploadDir"));
 			}
 			else if(getUploadFileName().startsWith("Food")){
 				session.put("uploadedFoodLst",uploadDir);
