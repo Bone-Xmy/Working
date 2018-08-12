@@ -8,7 +8,7 @@
 <property name="content" value="content"/>
 <property name="lib" value="lib"/>
 <!-- windows下的路径 -->
-<!-- Property name="webapps" value="F:/Study/apache-tomcat-8.5.29/webapps"/ -->
+<!--property name="webapps" value="F:/Study/apache-tomcat-8.5.29/webapps"/ -->
 <!-- mac下的路径 -->
 <property name="webapps" value="/Users/bone/Library/apacheTomcat8529/webapps"/>
 <!-- 定义一组文件和路径集 -->
@@ -113,5 +113,3 @@
 	<delete dir="${dest}"/>
 </target>
 </project>
-<!-- 测试 -->
-<!-- textsss -->

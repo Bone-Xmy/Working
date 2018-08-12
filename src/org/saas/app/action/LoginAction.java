@@ -8,6 +8,7 @@ import java.util.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import org.saas.app.sqlTools.SQLConn;
+import org.saas.app.Tools.Journal;
 
 public class LoginAction extends ActionSupport{
 	private String username;
@@ -45,6 +46,7 @@ public class LoginAction extends ActionSupport{
 
 		//执行查询
 		try{
+			Journal.writeLog("LoginAction:开始和数据库建立连接...");
 			rs = SQLConn.getConnection().createStatement().executeQuery(sql);
 			if(rs.next()){
 				if(Integer.parseInt(rs.getString("amount")) >= 1){

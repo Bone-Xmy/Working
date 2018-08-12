@@ -4,7 +4,7 @@
 	"http://www.w3.org/TR/xhtmll/DTD/xhtmll-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-	<title>成功页面</title>
+	<title>成功页面(welcome)</title>
 	<style type="text/css">
 		div#toolKinds {
 			border:1px solid black;
@@ -33,6 +33,7 @@
 <form action="pageDispatch" method="post">
 	<button onclick="this.form.action='pageDispatch';">报表对账</button>
 	<button onclick="repaired();">修复异常数据</button>
+</div>
 </form>
 <br/>
 <hr/>

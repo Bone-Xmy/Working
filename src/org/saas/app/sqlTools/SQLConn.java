@@ -22,7 +22,6 @@ public class SQLConn{
 
 	//构造方法
 	public SQLConn() throws Exception{
-		Journal journal = new Journal();
 		String sqlFile;
 		//For Mysql
 		//Class.forName(driver);
@@ -37,18 +36,18 @@ public class SQLConn{
 		Map<String,Object> session = ctx.getSession();
 		//如果还未登录或者没有上传数据，需要线连接到登陆的数据库
 		//如果已经登录并且上传数据了，则连接上传的数据库
-		journal.writeLog("session.get(\"user\")是否为空：" + (String)session.get("user"));
-		journal.writeLog("session.get(\"uploadedDir\")是否为空：" + ((String)session.get("uploadedDir")));
+		Journal.writeLog("SQLConn:session.get(\"user\")是否为空：" + (String)session.get("user"));
+		Journal.writeLog("SQLConn:session.get(\"uploadedDir\")是否为空：" + ((String)session.get("uploadedDir")));
 		if(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null){
 			sqlFile = (String)session.get("uploadDir");
 		}
 		else{
 			if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){
-				journal.writeLog("环境为mac");
+				Journal.writeLog("环境为mac");
 				sqlFile = "/Users/bone/myWork/source/hlldata.dll";
 			}
 			else{
-				journal.writeLog("环境为win");
+				Journal.writeLog("环境为win");
 				sqlFile = "E:/source/hlldata.dll";
 			}
 			
@@ -60,6 +59,7 @@ public class SQLConn{
 
 	//获得连接对象
 	public static Connection getConnection(){
+		Journal.writeLog("获取连接！！！");
 		return conn;
 	}
 
