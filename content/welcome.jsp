@@ -31,10 +31,8 @@
 <div>您已经登录!</div>
 <hr/>
 <form action="pageDispatch" method="post">
-<div id="toolKinds">
-	<div id="r1" onclick="getFirstPage();">报表对账</div>
-	<div id="r2" onclick="getSecondPage();">修复异常数据</div>
-</div>
+	<button onclick="this.form.action='pageDispatch';">报表对账</button>
+	<button onclick="repaired();">修复异常数据</button>
 </form>
 <br/>
 <hr/>
@@ -50,7 +48,7 @@
 		结束日期：<input name="endDate" type="text"/>
 		结束时间：<input name="endTime" type="text"/>
 		<br/>
-		<button type="submit">查询</button>
+		<!-- button type="submit">查询</button -->
 		<br/>
 		异常类型：
 		<select name="checkTypes">
@@ -78,6 +76,7 @@
 	</s:form>
 	<s:form action="checkSetFood">
 		<!-- s:submit value="检查套餐明细"/ -->
+		检查套餐明细是否有对应的主菜品：
 		<button type="submit">检查套餐明细</button>
 	</s:form>
 	<s:form action="upload" enctype="multipart/form-data">
@@ -89,17 +88,9 @@
 </div>
 <hr/>
 <script type="text/javascript">
-	function reports(){
-		//获取第一个div元素
-		targetOne = document.getElementById("r1");
-		console.log("clicked1p");
-		//动态修改表单的action属性
-		targetOne.action = "getFirstPage";
-		console.log("clicked1pp");
-	}
 	function repaired(){
 		//获取第二个div元素
-		targetTwo = document.getElementById("r2");
+		targetTwo = document.forms[0];
 		console.log("clicked2p");
 		//动态修改表单的action属性
 		targetTwo.action = "getSecondPage";
