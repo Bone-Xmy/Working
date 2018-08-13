@@ -31,7 +31,7 @@
 			<result name="input">/WEB-INF/content/exHanding.jsp</result>
 		</action>
 		<!-- 定义一个名为exceptionHanding的Action，其实现类为org.saas.app.action.ExceptionHandingAction -->
-		<action name="exceptionHanding">
+		<action name="exceptionHanding" class="org.saas.app.action.ExceptionHandingAction">
 			<result>/WEB-INF/content/exHanding.jsp</result>
 		</action>
 		<!-- 定义一个名为viewBook的Action，其实现类为为org.saas.app.action.showReportsAction -->

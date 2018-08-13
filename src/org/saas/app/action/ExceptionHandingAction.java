@@ -1,5 +1,6 @@
 package org.saas.app.action;
 
+import org.saas.app.Tools.Journal;
 import com.opensymphony.xwork2.ActionSupport;
 
 public class ExceptionHandingAction extends ActionSupport{
@@ -34,20 +35,25 @@ public class ExceptionHandingAction extends ActionSupport{
 	}
 
 	public String execute() throws Exception{
-		if(getExTypes.equals("所支付金额与应收金额不符")){
+		Journal.writeLog("exHanding开始生成Sql...");
+		if(getExTypes().equals("所支付金额与应收金额不符")){
 			if(getIsHis().equals("否")){
 				mySql = "delete from tbl_saas_order_pay where saasOrderKey in(" + getSaasOrderKey() + ");";
+				Journal.writeLog("生成指定Sql：" + mySql);
 				return SUCCESS;
 			}
 			else{
-				mySql = "delete from tbl_saas_order_pay_his where saasOrderKey in(" + getSaasOrderKey() + ");"
+				mySql = "delete from tbl_saas_order_pay_his where saasOrderKey in(" + getSaasOrderKey() + ");";
+				Journal.writeLog("生成指定Sql：" + mySql);
+				return SUCCESS;
 			}
 		}
-		else if(getExTypes.equals("删除订单号为空的数据(单号很长)")){
+		else if(getExTypes().equals("删除订单号为空的数据(单号很长)")){
 			return SUCCESS;
 		}
-		else if(getExTypes.equals("会员消费补单子")){
+		else if(getExTypes().equals("会员消费补单子")){
 			return SUCCESS;
 		}
+		return ERROR;
 	}
 }
