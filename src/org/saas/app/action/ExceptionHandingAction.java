@@ -49,7 +49,7 @@ public class ExceptionHandingAction extends ActionSupport{
 			}
 		}
 		else if(getExTypes().equals("删除订单号为空的数据(单号很长)")){
-			return SUCCESS;
+			mySql = "delete from tbl_saas_order_master where saasOrderKey = '';update tbl_saas_table set tableStatus = 0 where tableStatus = 1 and saasOrderKey = '';";
 		}
 		else if(getExTypes().equals("会员消费补单子")){
 			return SUCCESS;

@@ -37,9 +37,12 @@ public class SQLConn{
 		//如果还未登录或者没有上传数据，需要线连接到登陆的数据库
 		//如果已经登录并且上传数据了，则连接上传的数据库
 		Journal.writeLog("SQLConn:session.get(\"user\")是否为空：" + (String)session.get("user"));
-		Journal.writeLog("SQLConn:session.get(\"uploadedDir\")是否为空：" + ((String)session.get("uploadedDir")));
+		Journal.writeLog("SQLConn:session.get(\"uploadedDir\")是否为空：" + ((String)session.get("uploadDir")));
+		Journal.writeLog("first is :" + String.valueOf(((String)session.get("user")) != null) + "&& second is:" + String.valueOf(((String)session.get("uploadDir")) != null));
+		Journal.writeLog("是否连接到上传的文件：" + String.valueOf(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null));
 		if(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null){
-			sqlFile = (String)session.get("uploadDir");
+			sqlFile = (String)session.get("uploadDir") + "/hlldata.dll";
+			Journal.writeLog("连接文件：" + sqlFile);
 		}
 		else{
 			if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){

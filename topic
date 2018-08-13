@@ -5,4 +5,7 @@
 	eg:SQLConn
 
 3.为什么UploadAction.java上传失败没有到error.jsp页面？
-
+4.只要上传过一次，uploadDir这个session就有值了，如果这个时候再登陆，请求的数据库为上传的数据库，将登陆失败
+	如何解决：
+	<如何理解session，session什么时候过期？？>
+		==>浏览器关闭，session并不会自动关闭

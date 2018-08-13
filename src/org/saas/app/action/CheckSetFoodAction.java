@@ -36,7 +36,7 @@ public class CheckSetFoodAction extends ActionSupport{
 			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
 			ActionContext ctx = ActionContext.getContext();
 			Map<String,Object> session = ctx.getSession();
-			String foodFile = (String)session.get("uploadedFoodLst");
+			String foodFile = (String)session.get("uploadedFoodLst") + "foodLst.cdata";
 			JsonObject json = (JsonObject)parse.parse(new FileReader(foodFile));
 			
 			JsonArray array = json.get("data").getAsJsonObject().get("records").getAsJsonArray(); //获取foodLst数组
