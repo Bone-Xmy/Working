@@ -15,6 +15,8 @@ import com.google.gson.JsonSyntaxException;
 
 import java.util.*;
 
+import org.saas.app.Tools.Journal;
+
 public class CheckSetFoodAction extends ActionSupport{
 	//List<String> titleList = new ArrayList<>(); //表头直接在jsp里面通过list实现
 	List<List<String>> foodDetailList = new ArrayList<>();
@@ -36,7 +38,8 @@ public class CheckSetFoodAction extends ActionSupport{
 			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
 			ActionContext ctx = ActionContext.getContext();
 			Map<String,Object> session = ctx.getSession();
-			String foodFile = (String)session.get("uploadedFoodLst") + "foodLst.cdata";
+			String foodFile = (String)session.get("uploadedFoodLst") + "/" +"foodLst.cdata";
+			Journal.writeLog("CheckSetFood的数据文件是： ==> " + foodFile);
 			JsonObject json = (JsonObject)parse.parse(new FileReader(foodFile));
 			
 			JsonArray array = json.get("data").getAsJsonObject().get("records").getAsJsonArray(); //获取foodLst数组
@@ -70,6 +73,7 @@ public class CheckSetFoodAction extends ActionSupport{
 									resultDesc.add(setfoodkey);
 									resultDesc.add("是");
 									foodDetailList.add(resultDesc);
+									Journal.writeLog("菜品信息是：" + foodDetailList);
 									//System.out.println("套餐" + foodName + "的明细菜品：" + SFDetailName + "缺失对应的单菜品，菜品的key为：" + setfoodkey + ",有同名的单菜品，但是foodKey不一致！！");
 								}
 								else{
@@ -78,6 +82,7 @@ public class CheckSetFoodAction extends ActionSupport{
 									resultDesc.add(setfoodkey);
 									resultDesc.add("否");
 									foodDetailList.add(resultDesc);
+									Journal.writeLog("菜品信息是：" + foodDetailList);
 									//System.out.println("套餐" + foodName + "的明细菜品：" + SFDetailName + "缺失对应的单菜品，菜品的key为：" + setfoodkey);
 								}
 							}
