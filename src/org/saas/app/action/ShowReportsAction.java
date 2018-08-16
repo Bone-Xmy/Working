@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.ResultSetMetaData;
 import java.sql.PreparedStatement;
+
+import org.saas.app.Tools.Journal;
 import org.saas.app.sqlTools.SQLConn;
 
 public class ShowReportsAction extends ActionSupport{
@@ -81,15 +83,20 @@ public class ShowReportsAction extends ActionSupport{
 				oneRow.add(count + "");
 				for(int i = 0; i < rsmd.getColumnCount(); i++){
 					oneRow.add(rs.getString(i + 1));
+					Journal.writeLog("遍历结果集");
 				}
+				Journal.writeLog("异常数据查询结束，下面开始进行判断...");
 				try{
-					oneRow.add(this.isFJZNotDone(rs.getString(1)) + this.isLoseSFDetail(rs.getString(1),"1"));
+					Journal.writeLog("是否进行了反结账：" + this.isFJZNotDone(rs.getString(1)));
+					oneRow.add(this.isFJZNotDone(rs.getString(1)) + "\r\n" + this.isLoseSFDetail(rs.getString(1),"1"));
+					//oneRow.add(this.isFJZNotDone(rs.getString(1)));
 				}
-				catch(Exception sqle){
-					sqle.printStackTrace();
+				catch(Exception e){
+					e.printStackTrace();
 				}
+				rsList.add(oneRow);	
+				Journal.writeLog("第" + count + "次遍历，结果为：" + rsList.toString());
 				count++;
-				rsList.add(oneRow);
 			}
 			return SUCCESS;
 		} catch(SQLException ex){
@@ -101,6 +108,7 @@ public class ShowReportsAction extends ActionSupport{
 	
 	//判断可能导致问题的原因
 	public String isFJZNotDone(String saasOrderKey) throws Exception{
+		Journal.writeLog("传入isFJZNotDone的saasOrderKey:" + saasOrderKey);
 		//判断结果
 		String verdict;
 		//是否进行了反结账
@@ -123,19 +131,23 @@ public class ShowReportsAction extends ActionSupport{
 			PreparedStatement pstmt1 = SQLConn.getConnection().prepareStatement(sql_isFJZ);
 			pstmt1.setObject(1,"%" + saasOrderKey + "%");
 			rs1 = pstmt1.executeQuery();
+			Journal.writeLog("遍历反结账日志的结果集...");
 			while(rs1.next()){
 				PreparedStatement pstmt2 = SQLConn.getConnection().prepareStatement(sql_unDone);
 				pstmt2.setObject(1,"%" + saasOrderKey + "%");
 				rs2 = pstmt2.executeQuery();
+				Journal.writeLog("遍历红冲表的结果集...");
 				while(rs2.next()){
 					if((rs2.getInt(1) % 2) != 0){
 						verdict = "进行了反结账，但是反结账没有完成\r\n";
 						verdict += "（判断依据：日志里面有反结账操作的记录，并且反结账红冲表只有进入账单的记录，没有完成反结账出去账单的记录）";
+						Journal.writeLog("是否反结账的结果：" + verdict);
 						return verdict;
 					}
 				}
 			}
-			return " ";
+			Journal.writeLog("是否反结账return的是：没有进行反结账");
+			return "没有进行反结账";
 		} catch(SQLException ex){
 			return ERROR;
 		} finally{
@@ -145,15 +157,17 @@ public class ShowReportsAction extends ActionSupport{
 	 
 	//判断是否有套餐明细缺失
 	public String isLoseSFDetail(String saasOrderKey,String isHis) throws Exception{
+		Journal.writeLog("传入isLoseSFDetail的saasOrderKey:" + saasOrderKey);
 		//判断结果
 		String verdict;
+		String sql_isLostSFD;
 		PreparedStatement pstmt = null;
 		//是否缺失套餐明细
 		if(isHis.equals("0")){
-			String sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+			sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
 		}
 		else{
-			String sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food_his odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food_his odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+			sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food_his odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food_his odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
 		}
 		
 		try{
@@ -172,6 +186,7 @@ public class ShowReportsAction extends ActionSupport{
 			//else{
 			//	PreparedStatement pstmt = SQLConn.getConnection().prepareStatement(sql_isLostSFD_his);
 			//}
+			pstmt = SQLConn.getConnection().prepareStatement(sql_isLostSFD);
 			pstmt.setObject(1,saasOrderKey);
 			rs = pstmt.executeQuery();
 			while(rs.next()){
@@ -180,7 +195,7 @@ public class ShowReportsAction extends ActionSupport{
 					return verdict;
 				}
 			}
-			return " ";
+			return "套餐明细正常";
 		}
 		catch (SQLException ex){
 			return ERROR;
@@ -190,9 +205,10 @@ public class ShowReportsAction extends ActionSupport{
 		}
 	}
 	
+	/**
 	public String getLogs() throws Exception{
 		
-	}
+	}*/
 
 	public String execute() throws Exception{
 		String sql = "";
