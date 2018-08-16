@@ -72,6 +72,7 @@ public class ShowReportsAction extends ActionSupport{
 			for(int i = 0; i < rsmd.getColumnCount(); i++){
 				colList.add(rsmd.getColumnName(i + 1));
 			}
+			colList.add("可能的原因");
 			//将结果集加入rsList
 			while(rs.next()){
 				//保存一行数据的list
@@ -80,6 +81,12 @@ public class ShowReportsAction extends ActionSupport{
 				oneRow.add(count + "");
 				for(int i = 0; i < rsmd.getColumnCount(); i++){
 					oneRow.add(rs.getString(i + 1));
+				}
+				try{
+					oneRow.add(this.isFJZNotDone(rs.getString(1)) + this.isLoseSFDetail(rs.getString(1),"1"));
+				}
+				catch(Exception sqle){
+					sqle.printStackTrace();
 				}
 				count++;
 				rsList.add(oneRow);
@@ -90,6 +97,101 @@ public class ShowReportsAction extends ActionSupport{
 		} finally{
 			SQLConn.CloseConn();
 		}
+	}
+	
+	//判断可能导致问题的原因
+	public String isFJZNotDone(String saasOrderKey) throws Exception{
+		//判断结果
+		String verdict;
+		//是否进行了反结账
+		String sql_isFJZ = "select itemID from tbl_saas_order_log where logRemark like ? and logRemark like '%反结账%'";
+		//是否反结账没有完成
+		String sql_unDone = "select count(*) from tbl_order_master_offset where saasOrderKey like ?";
+		
+		//新建连接
+		try{
+			new SQLConn();
+		}
+		catch(Exception e){
+			return ERROR;
+		}
+		//结果集
+		ResultSet rs1 = null;
+		ResultSet rs2 = null;
+		//判断是否进行了反结账，且反结账没有完成
+		try{
+			PreparedStatement pstmt1 = SQLConn.getConnection().prepareStatement(sql_isFJZ);
+			pstmt1.setObject(1,"%" + saasOrderKey + "%");
+			rs1 = pstmt1.executeQuery();
+			while(rs1.next()){
+				PreparedStatement pstmt2 = SQLConn.getConnection().prepareStatement(sql_unDone);
+				pstmt2.setObject(1,"%" + saasOrderKey + "%");
+				rs2 = pstmt2.executeQuery();
+				while(rs2.next()){
+					if((rs2.getInt(1) % 2) != 0){
+						verdict = "进行了反结账，但是反结账没有完成\r\n";
+						verdict += "（判断依据：日志里面有反结账操作的记录，并且反结账红冲表只有进入账单的记录，没有完成反结账出去账单的记录）";
+						return verdict;
+					}
+				}
+			}
+			return " ";
+		} catch(SQLException ex){
+			return ERROR;
+		} finally{
+			SQLConn.CloseConn();
+		}	
+	}
+	 
+	//判断是否有套餐明细缺失
+	public String isLoseSFDetail(String saasOrderKey,String isHis) throws Exception{
+		//判断结果
+		String verdict;
+		PreparedStatement pstmt = null;
+		//是否缺失套餐明细
+		if(isHis.equals("0")){
+			String sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+		}
+		else{
+			String sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food_his odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food_his odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+		}
+		
+		try{
+			new SQLConn();
+		}
+		catch(Exception e){
+			return ERROR;
+		}
+		ResultSet rs = null;
+		
+		try{
+			//此处if...else... 为啥不行，需要使用上面的？？
+			//if(isHis.equals("0")){
+			//	PreparedStatement pstmt = SQLConn.getConnection().prepareStatement(sql_isLostSFD);
+			//}
+			//else{
+			//	PreparedStatement pstmt = SQLConn.getConnection().prepareStatement(sql_isLostSFD_his);
+			//}
+			pstmt.setObject(1,saasOrderKey);
+			rs = pstmt.executeQuery();
+			while(rs.next()){
+				if(rs.getInt(1) > 0){
+					verdict = "账单里面点了套餐，但是套餐缺少支付明细\r\n";
+					return verdict;
+				}
+			}
+			return " ";
+		}
+		catch (SQLException ex){
+			return ERROR;
+		}
+		finally {
+			SQLConn.CloseConn();
+		}
+	}
+	
+	public String getLogs() throws Exception{
+		
 	}
 
 	public String execute() throws Exception{
