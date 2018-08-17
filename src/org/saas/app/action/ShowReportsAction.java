@@ -75,6 +75,7 @@ public class ShowReportsAction extends ActionSupport{
 				colList.add(rsmd.getColumnName(i + 1));
 			}
 			colList.add("可能的原因");
+			colList.add("相关日志");
 			//将结果集加入rsList
 			while(rs.next()){
 				//保存一行数据的list
@@ -91,6 +92,8 @@ public class ShowReportsAction extends ActionSupport{
 					oneRow.add(this.isFJZNotDone(rs.getString(1)) + "\r\n" + this.isLoseSFDetail(rs.getString(1),"1"));
 					//oneRow.add(this.isFJZNotDone(rs.getString(1)));
 				}
+				//加入相关的日志
+				oneRow.add(this.getLogs(rs.getString(1)));
 				catch(Exception e){
 					e.printStackTrace();
 				}
@@ -205,10 +208,35 @@ public class ShowReportsAction extends ActionSupport{
 		}
 	}
 	
-	/**
-	public String getLogs() throws Exception{
+	//获取对应账单日志列表
+	public String getLogs(String saasOrderKey) throws Exception{
+		String logRemarks = " ";
+		String sql = "select logRemark from tbl_saas_order_log where saasOrderKey like ?";
+		//新建连接
+		try{
+			new SQLConn();
+		}
+		catch(Exception e){
+			return ERROR;
+		}
 		
-	}*/
+		try{
+			ResultSet rs = null;
+			PreparedStatement pstmt = SQLConn.getConnection().prepareStatement(sql);
+			pstmt.setObject(1,"%" + saasOrderKey + "%");
+			pstmt.executeQuery();
+			while(rs.next()){
+				logRemarks += rs.getString(1) + "\r\n";
+			}
+			return logRemarks;
+		}
+		catch(SQLException ex){
+			return ERROR;
+		}
+		finally{
+			SQLConn.CloseConn();
+		}
+	}
 
 	public String execute() throws Exception{
 		String sql = "";
