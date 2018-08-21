@@ -224,7 +224,7 @@ public class ShowReportsAction extends ActionSupport{
 			ResultSet rs = null;
 			PreparedStatement pstmt = SQLConn.getConnection().prepareStatement(sql);
 			pstmt.setObject(1,"%" + saasOrderKey + "%");
-			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
 			while(rs.next()){
 				logRemarks += rs.getString(1) + "\r\n";
 			}
