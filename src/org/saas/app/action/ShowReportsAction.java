@@ -92,11 +92,11 @@ public class ShowReportsAction extends ActionSupport{
 					oneRow.add(this.isFJZNotDone(rs.getString(1)) + "\r\n" + this.isLoseSFDetail(rs.getString(1),"1"));
 					//oneRow.add(this.isFJZNotDone(rs.getString(1)));
 				}
-				//加入相关的日志
-				oneRow.add(this.getLogs(rs.getString(1)));
 				catch(Exception e){
 					e.printStackTrace();
 				}
+				//加入相关的日志
+				oneRow.add(this.getLogs(rs.getString(1)));
 				rsList.add(oneRow);	
 				Journal.writeLog("第" + count + "次遍历，结果为：" + rsList.toString());
 				count++;

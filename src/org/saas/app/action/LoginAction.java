@@ -7,7 +7,8 @@ import java.util.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import org.saas.app.sqlTools.SQLConn;
+
+import org.saas.app.sqlTools.DbDao;
 import org.saas.app.Tools.Journal;
 
 public class LoginAction extends ActionSupport{
@@ -28,41 +29,23 @@ public class LoginAction extends ActionSupport{
 	}
 
 	public String execute() throws Exception{
-		//新建连接
-		try{
-			new SQLConn();
-		}
-		catch(Exception e){
-			e.printStackTrace();
-			return LOGIN;
-		}
-		//查询账号的SQL
-		String sql = "select count(*) as amount from tbl_saas_emp where userName = '" + username + "' and password = '" + password + "'";
-		ResultSet rs = null;
+		DbDao dd = new DbDao();
+		String sql = "select count(*) as amount from tbl_saas_emp where userName = ? and password = ? ";
+		//执行查询
+		ResultSet rs = dd.doQuery(sql,getUsername(),getPassword());
 
 		//获取ActionContext
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> session = ctx.getSession();
 
-		//执行查询
-		try{
-			Journal.writeLog("LoginAction:开始和数据库建立连接...");
-			rs = SQLConn.getConnection().createStatement().executeQuery(sql);
-			if(rs.next()){
-				if(Integer.parseInt(rs.getString("amount")) >= 1){
-					session.put("user",getUsername());
-					return SUCCESS;
-				}
-				else{
-					return LOGIN;
-				}
+		if(rs.next()){
+			if(Integer.parseInt(rs.getString("amount")) >= 1){
+				session.put("user",getUsername());
+				return SUCCESS;
 			}
-		} catch(SQLException ex){
-			ex.printStackTrace();
 			return LOGIN;
-		}	finally{
-			SQLConn.CloseConn();
 		}
+		dd.closeConn();
 		return ERROR;
 	}
 }

@@ -6,10 +6,10 @@ import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 
 import java.sql.*;
+import java.util.*;
 
 
-public class DbDao
-{
+public class DbDao{
 	private Connection conn;
 	private String sqlFile;
 
@@ -49,6 +49,34 @@ public class DbDao
 		return conn;
 	}
 
+	//执行查询
+	public ResultSet doQuery(String sql,Object... args) throws Exception{
+		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		for(int i = 0; i < args.length; i++){
+			pstmt.setObject(i + 1,args[i]);
+		}
+		return pstmt.executeQuery();
+	}
+
+	/* 批量执行SQL:
+	   1.创建的是普通Statement
+	   2.可以执行insert和update语句
+	   */
+	public void batchProcessSqls(ArrayList<String> sqls) throws Exception{
+		//获取链接并关闭自动提交，开启事务
+		conn = getConnection();
+		conn.setAutoCommit(false);
+		Statement stmt = conn.createStatement();
+		//循环执行SQL
+		for(Object obj : sqls){
+			String sql = (String)obj;
+			stmt.executeUpdate(sql);
+		}
+		conn.commit();
+		//是否需要？
+		//conn.close();
+	}
+
 	// 插入记录
 	public boolean insert(String sql , Object... args)
 		throws Exception
@@ -65,28 +93,7 @@ public class DbDao
 		pstmt.close();
 		return true;
 	}
-	// 执行查询
-	public ResultSet query(String sql , boolean updatable , Object... args )
-		throws Exception
-	{
-		PreparedStatement pstmt = null;
-		if (updatable)
-		{
-			// 创建可更新的PreparedStatement
-			pstmt = getConnection().prepareStatement(sql
-				, ResultSet.TYPE_SCROLL_INSENSITIVE
-				, ResultSet.CONCUR_UPDATABLE);
-		}
-		else
-		{
-			pstmt = getConnection().prepareStatement(sql);
-		}
-		for (int i = 0; i < args.length ; i++ )
-		{
-			pstmt.setObject( i + 1 , args[i]);
-		}
-		return pstmt.executeQuery();
-	}
+	
 	// 执行修改
 	public void modify(String sql , Object... args)
 		throws Exception
