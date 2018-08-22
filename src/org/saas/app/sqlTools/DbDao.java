@@ -74,6 +74,7 @@ public class DbDao{
 		}
 		conn.commit();
 		//是否需要？
+		//不需要，建议由程序来close，因为可能还有需要执行的另一批Sql
 		//conn.close();
 	}
 
