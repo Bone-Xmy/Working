@@ -40,7 +40,7 @@ public class DbDao{
 	}
 
 	//获取连接
-	public Connection getConnection(){
+	public Connection getConnection() throws Exception{
 		if(conn == null){
 			Class.forName("org.sqlite.JDBC");
 			String connSQLFile = "jdbc:sqlite:" + getSqlFile();

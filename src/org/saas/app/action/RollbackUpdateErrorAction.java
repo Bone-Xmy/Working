@@ -5,6 +5,7 @@ import org.saas.app.sqlTools.DbDao;
 import com.opensymphony.xwork2.ActionSupport;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class RollbackUpdateErrorAction extends ActionSupport{
 	public String execute() throws Exception{
@@ -16,7 +17,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 		//处理的表
 		String tableName;
 		//表的列名（字段名）
-		StringBuffer columns = "";
+		StringBuffer columns = new StringBuffer();
 
 		ResultSet rs1 = dd.doQuery(sql_tables);
 		
@@ -25,7 +26,8 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 			if(tableName.endsWith("his_temp")){
 				ResultSet rs2 = dd.doQuery(sql_columns,tableName.substring(1,tableName.length() - 5));
 				while(rs2.next()){
-					columns += rs2.getString(2) + ",";
+					//StringBuffer后面追加字符串
+					columns.append(rs2.getString(2) + ",");
 				}
 				//StringBuffer转换为String，且去掉最后吗的逗号
 				String tempColumns = columns.toString().substring(1,columns.toString().length() - 1);
@@ -33,7 +35,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 					+ tableName.substring(1,tableName.length() - 5)
 					+ "("
 					+ tempColumns
-					+ ")";
+					+ ")"
 					+ "select" 
 					+ tempColumns
 					+ "from"
@@ -52,7 +54,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 				//记录指针移到第二行
 				rs2.absolute(2);
 				while(rs2.next()){
-					columns += rs2.getString(2) + ",";
+					columns.append(rs2.getString(2) + ",");
 				}
 				//StringBuffer转换为String，且去掉最后吗的逗号
 				String tempColumns = columns.toString().substring(1,columns.toString().length() - 1);
@@ -60,7 +62,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 					+ tableName.substring(1,tableName.length() - 5)
 					+ "("
 					+ tempColumns
-					+ ")";
+					+ ")"
 					+ "select" 
 					+ tempColumns
 					+ "from"
