@@ -12,7 +12,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 		//保存targetSqls的List
 		ArrayList<String> sqls = new ArrayList<>();
 		DbDao dd = new DbDao();
-		String sql_tables = "select name from sqlit。e_master where type='table' order by name;";
+		String sql_tables = "select name from sqlite_master where type='table' order by name;";
 		String sql_columns = "PRAGMA table_info([?])";
 		//处理的表
 		String tableName;

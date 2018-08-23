@@ -75,6 +75,10 @@
 		操作日志：<input name="orderLogs" type="text"/>
 		<button type="submit">日志查询</button>
 	</s:form>
+	<s:form action="rollbackUpdateError">
+		修复升级导致的字段异常：
+		<button type="submit">修复</button>
+	</s:form>
 	<s:form action="checkSetFood">
 		<!-- s:submit value="检查套餐明细"/ -->
 		检查套餐明细是否有对应的主菜品：

@@ -8,7 +8,6 @@ import org.apache.struts2.ServletActionContext;
 import java.sql.*;
 import java.util.*;
 
-
 public class DbDao{
 	private Connection conn;
 	private String sqlFile;
@@ -53,6 +52,7 @@ public class DbDao{
 	public ResultSet doQuery(String sql,Object... args) throws Exception{
 		PreparedStatement pstmt = getConnection().prepareStatement(sql);
 		for(int i = 0; i < args.length; i++){
+			//Journal.writeLog("第" + i + "个元素是：" + args[i].toString());
 			pstmt.setObject(i + 1,args[i]);
 		}
 		return pstmt.executeQuery();

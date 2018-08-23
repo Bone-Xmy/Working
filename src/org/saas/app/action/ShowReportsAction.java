@@ -53,6 +53,9 @@ public class ShowReportsAction extends ActionSupport{
 	}
 
 	public String dataShow(String sql,Object...args) throws Exception{
+		//原因汇总
+		String reasons = "未知";
+
 		getDd();
 		ResultSet rs = dd.doQuery(sql,args);
 		//结果集增加序号
@@ -64,7 +67,7 @@ public class ShowReportsAction extends ActionSupport{
 			colList.add(rsmd.getColumnName(i + 1));
 		}
 		colList.add("可能的原因");
-		colList.add("相关日志");
+		//colList.add("相关日志");
 		//将结果集加入rsList
 		while(rs.next()){
 			//保存一行数据的list
@@ -74,17 +77,25 @@ public class ShowReportsAction extends ActionSupport{
 			for(int i = 0; i < rsmd.getColumnCount(); i++){
 				oneRow.add(rs.getString(i + 1));
 			}
-			oneRow.add(this.isFJZNotDone(rs.getString(1)) + "\r\n" + this.isLoseSFDetail(rs.getString(1),"1"));
+			//可能的原因的具体内容
+			if(!(this.isFJZNotDone(rs.getString(1))).equals("allRight")){
+				reasons = this.isFJZNotDone(rs.getString(1));
+				if(!(this.isLoseSFDetail(rs.getString(1),"1")).equals("allRight")){
+					reasons += ";\r\n" + this.isLoseSFDetail(rs.getString(1),"1");
+				}
+			}
+			oneRow.add(reasons);
 			//加入相关的日志
-			oneRow.add(this.getLogs(rs.getString(1)));
+			//oneRow.add(this.getLogs(rs.getString(1)));
 			rsList.add(oneRow);
 			count++;
 		}
+		//由于还需要分析其它方法的结果，所以不能在别的方法里面close
+		dd.closeConn();
 		return SUCCESS;
 	}
 	
-	
-	//判断可能导致问题的原因
+	//是否进行了反结账，但是反结账没有完成
 	public String isFJZNotDone(String saasOrderKey) throws Exception{
 		Journal.writeLog("传入isFJZNotDone的saasOrderKey:" + saasOrderKey);
 		//判断结果
@@ -96,7 +107,7 @@ public class ShowReportsAction extends ActionSupport{
 		
 		getDd();
 		//结果集
-		ResultSet rs1 = dd.doQuery(sql_isFJZ);
+		ResultSet rs1 = dd.doQuery(sql_isFJZ,"%" + saasOrderKey + "%");
 		//判断是否进行了反结账，且反结账没有完成
 		while(rs1.next()){
 			ResultSet rs2 = dd.doQuery(sql_unDone,"%" + saasOrderKey + "%");
@@ -104,13 +115,13 @@ public class ShowReportsAction extends ActionSupport{
 				if((rs2.getInt(1) % 2) != 0){
 					verdict = "进行了反结账，但是反结账没有完成\r\n";
 					verdict += "（判断依据：日志里面有反结账操作的记录，并且反结账红冲表只有进入账单的记录，没有完成反结账出去账单的记录）";
-					Journal.writeLog("是否反结账的结果：" + verdict);
+					//Journal.writeLog("是否反结账的结果：" + verdict);
 					return verdict;
 				}
 			}
 		}
-		dd.closeConn();
-		return "没有进行反结账";
+		//dd.closeConn();
+		return "allRight";
 	}
 	 
 	//判断是否有套餐明细缺失
@@ -121,10 +132,10 @@ public class ShowReportsAction extends ActionSupport{
 		String sql_isLostSFD;
 		//是否缺失套餐明细
 		if(isHis.equals("0")){
-			sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+			sql_isLostSFD = "select count(distinct (saasOrderKey)) from tbl_saas_order_food odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food odf2 where odf2.saasOrderKey = odf.saasOrderKey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
 		}
 		else{
-			sql_isLostSFD = "select count(distinct (saasorderkey)) from tbl_saas_order_food_his odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food_his odf2 where odf2.saasOrderKey = odf.saasorderkey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
+			sql_isLostSFD = "select count(distinct (saasOrderKey)) from tbl_saas_order_food_his odf where isSetFood = 1 and isSFDetail = 0 and (select count(*) from tbl_saas_order_food_his odf2 where odf2.saasOrderKey = odf.saasOrderKey and isSetFood = 1 and isSFDetail = 1 and odf2.parentFoodfromItemKey = odf.itemKey)= 0 and saasOrderKey = ?";
 		}
 		
 		getDd();
@@ -135,21 +146,21 @@ public class ShowReportsAction extends ActionSupport{
 				return verdict;
 			}
 		}
-		dd.closeConn();
-		return "套餐明细正常";
+		//dd.closeConn();
+		return "allRight";
 	}
 	
 	//获取对应账单日志列表
 	public String getLogs(String saasOrderKey) throws Exception{
 		String logRemarks = " ";
-		String sql = "select logRemark from tbl_saas_order_log where saasOrderKey like ?";
+		String sql = "select logRemark from tbl_saas_order_log where logRemark like ?";
 		//新建连接
 		getDd();
 		ResultSet rs = dd.doQuery(sql,"%" + saasOrderKey + "%");
 		while(rs.next()){
 			logRemarks += rs.getString(1) + "\r\n";
 		}
-		dd.closeConn();
+		//dd.closeConn();
 		return logRemarks;
 	}
 

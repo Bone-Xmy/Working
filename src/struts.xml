@@ -34,7 +34,11 @@
 		<action name="exceptionHanding" class="org.saas.app.action.ExceptionHandingAction">
 			<result>/WEB-INF/content/exHanding.jsp</result>
 		</action>
-		<!-- 定义一个名为viewBook的Action，其实现类为为org.saas.app.action.showReportsAction -->
+		<!-- 定义一个名为rollbackUpdateError的Action，其实现类为org.saas.app.action.RollbackUpdateErrorAction -->
+		<action name="rollbackUpdateError" class="org.saas.app.action.RollbackUpdateErrorAction">
+			<result>/WEB-INF/content/rollbackSuccess.jsp</result>
+		</action>
+		<!-- 定义一个名为showReports的Action，其实现类为为org.saas.app.action.showReportsAction -->
 		<action name="showReports" class="org.saas.app.action.ShowReportsAction">
 			<!-- 返回success视图名时，转入viewBook.jsp页面 -->
 			<result>/WEB-INF/content/myReports.jsp</result>

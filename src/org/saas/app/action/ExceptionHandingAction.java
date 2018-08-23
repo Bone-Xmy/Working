@@ -31,6 +31,9 @@ public class ExceptionHandingAction extends ActionSupport{
 		this.isHis = isHis;
 	}
 	public String getIsHis(){
+		if(isHis == null){
+			isHis = "否";
+		}
 		return this.isHis;
 	}
 
