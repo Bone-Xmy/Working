@@ -1,6 +1,7 @@
 package org.saas.app.action;
 
 import org.saas.app.sqlTools.DbDao;
+import org.saas.app.Tools.Journal;
 
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -23,16 +24,20 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 		
 		while(rs1.next()){
 			tableName = rs1.getString(1);
+
+			Journal.writeLog(tableName);
+
 			if(tableName.endsWith("his_temp")){
-				ResultSet rs2 = dd.doQuery(sql_columns,tableName.substring(1,tableName.length() - 5));
+				sql_columns = "PRAGMA table_info([" + tableName.substring(0,tableName.length() - 5) + "])";
+				ResultSet rs2 = dd.doQuery(sql_columns);
 				while(rs2.next()){
 					//StringBuffer后面追加字符串
 					columns.append(rs2.getString(2) + ",");
 				}
 				//StringBuffer转换为String，且去掉最后吗的逗号
-				String tempColumns = columns.toString().substring(1,columns.toString().length() - 1);
+				String tempColumns = columns.toString().substring(0,columns.toString().length() - 1);
 				String tempInsert = "insert into " 
-					+ tableName.substring(1,tableName.length() - 5)
+					+ tableName.substring(0,tableName.length() - 5)
 					+ "("
 					+ tempColumns
 					+ ")"
@@ -42,6 +47,9 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 					+ tableName;
 				String tempDrop = "drop table" + tableName;
 
+				Journal.writeLog("SQl:" + tempInsert);
+				Journal.writeLog("SQl:" + tempDrop);
+
 				sqls.add(tempInsert);
 				sqls.add(tempDrop);
 
@@ -50,16 +58,20 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 				sqls.clear();
 			}
 			else if(tableName.endsWith("temp")){
-				ResultSet rs2 = dd.doQuery(sql_columns,tableName.substring(1,tableName.length() - 5));
+
+				Journal.writeLog("substring后的表为：" + tableName.substring(0,tableName.length() - 5));
+
+				sql_columns = "PRAGMA table_info([" + tableName.substring(0,tableName.length() - 5) + "])";
+				ResultSet rs2 = dd.doQuery(sql_columns);
 				//记录指针移到第二行
 				rs2.absolute(2);
 				while(rs2.next()){
 					columns.append(rs2.getString(2) + ",");
 				}
 				//StringBuffer转换为String，且去掉最后吗的逗号
-				String tempColumns = columns.toString().substring(1,columns.toString().length() - 1);
+				String tempColumns = columns.toString().substring(0,columns.toString().length() - 1);
 				String tempInsert = "insert into " 
-					+ tableName.substring(1,tableName.length() - 5)
+					+ tableName.substring(0,tableName.length() - 5)
 					+ "("
 					+ tempColumns
 					+ ")"

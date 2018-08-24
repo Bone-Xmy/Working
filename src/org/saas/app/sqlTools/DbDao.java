@@ -20,10 +20,14 @@ public class DbDao{
 		//获取ActionContext
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> session = ctx.getSession();
+
+		Journal.writeLog("user" + (String)session.get("user"));
+		Journal.writeLog("uploadDir" + (String)session.get("uploadDir"));
+
 		
 		if(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null){
-			Journal.writeLog("连接文件：" + (String)session.get("uploadDir") + "/hlldata.dll");
-			return (String)session.get("uploadDir") + "/hlldata.dll";
+			Journal.writeLog("连接文件：" + (String)session.get("uploadDir") + "\\hlldata.dll");
+			return (String)session.get("uploadDir") + "\\hlldata.dll";
 			
 		}
 		else{
@@ -50,8 +54,10 @@ public class DbDao{
 
 	//执行查询
 	public ResultSet doQuery(String sql,Object... args) throws Exception{
+		Journal.writeLog("传入Sql" + sql);
 		PreparedStatement pstmt = getConnection().prepareStatement(sql);
 		for(int i = 0; i < args.length; i++){
+			Journal.writeLog("length = " + args.length + "args[i] = " + args[i]);
 			//Journal.writeLog("第" + i + "个元素是：" + args[i].toString());
 			pstmt.setObject(i + 1,args[i]);
 		}
