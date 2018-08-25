@@ -57,7 +57,7 @@ public class ShowReportsAction extends ActionSupport{
 		String reasons = "未知";
 
 		getDd();
-		ResultSet rs = dd.doQuery(sql,args);
+		ResultSet rs = dd.doQuery(sql,false,args);
 		//结果集增加序号
 		int count = 1;
 		ResultSetMetaData rsmd = rs.getMetaData();
@@ -107,10 +107,10 @@ public class ShowReportsAction extends ActionSupport{
 		
 		getDd();
 		//结果集
-		ResultSet rs1 = dd.doQuery(sql_isFJZ,"%" + saasOrderKey + "%");
+		ResultSet rs1 = dd.doQuery(sql_isFJZ,false,"%" + saasOrderKey + "%");
 		//判断是否进行了反结账，且反结账没有完成
 		while(rs1.next()){
-			ResultSet rs2 = dd.doQuery(sql_unDone,"%" + saasOrderKey + "%");
+			ResultSet rs2 = dd.doQuery(sql_unDone,false,"%" + saasOrderKey + "%");
 			while(rs2.next()){
 				if((rs2.getInt(1) % 2) != 0){
 					verdict = "进行了反结账，但是反结账没有完成\r\n";
@@ -139,7 +139,7 @@ public class ShowReportsAction extends ActionSupport{
 		}
 		
 		getDd();
-		ResultSet rs =  dd.doQuery(sql_isLostSFD,saasOrderKey);
+		ResultSet rs =  dd.doQuery(sql_isLostSFD,false,saasOrderKey);
 		while(rs.next()){
 			if(rs.getInt(1) > 0){
 				verdict = "账单里面点了套餐，但是套餐缺少支付明细\r\n";
@@ -150,13 +150,16 @@ public class ShowReportsAction extends ActionSupport{
 		return "allRight";
 	}
 	
+	//使用会员消费，并且进行了撤销，撤销结果返回之前完成了结账
+
+	
 	//获取对应账单日志列表
 	public String getLogs(String saasOrderKey) throws Exception{
 		String logRemarks = " ";
 		String sql = "select logRemark from tbl_saas_order_log where logRemark like ?";
 		//新建连接
 		getDd();
-		ResultSet rs = dd.doQuery(sql,"%" + saasOrderKey + "%");
+		ResultSet rs = dd.doQuery(sql,false,"%" + saasOrderKey + "%");
 		while(rs.next()){
 			logRemarks += rs.getString(1) + "\r\n";
 		}

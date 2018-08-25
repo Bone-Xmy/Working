@@ -53,9 +53,17 @@ public class DbDao{
 	}
 
 	//执行查询
-	public ResultSet doQuery(String sql,Object... args) throws Exception{
+	public ResultSet doQuery(String sql,boolean updatable,Object... args) throws Exception{
 		Journal.writeLog("传入Sql" + sql);
-		PreparedStatement pstmt = getConnection().prepareStatement(sql);
+		PreparedStatement pstmt = null;
+		if(updatable){
+			//创建可更新的PreparedStatement
+			pstmt = getConnection().prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE);
+		}
+		else{
+			pstmt = getConnection().prepareStatement(sql);
+		}
+		
 		for(int i = 0; i < args.length; i++){
 			Journal.writeLog("length = " + args.length + "args[i] = " + args[i]);
 			//Journal.writeLog("第" + i + "个元素是：" + args[i].toString());

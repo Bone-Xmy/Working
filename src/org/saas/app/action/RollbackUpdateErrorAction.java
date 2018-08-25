@@ -20,7 +20,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 		//表的列名（字段名）
 		StringBuffer columns = new StringBuffer();
 
-		ResultSet rs1 = dd.doQuery(sql_tables);
+		ResultSet rs1 = dd.doQuery(sql_tables,false);
 		
 		while(rs1.next()){
 			tableName = rs1.getString(1);
@@ -29,7 +29,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 
 			if(tableName.endsWith("his_temp")){
 				sql_columns = "PRAGMA table_info([" + tableName.substring(0,tableName.length() - 5) + "])";
-				ResultSet rs2 = dd.doQuery(sql_columns);
+				ResultSet rs2 = dd.doQuery(sql_columns,false);
 				while(rs2.next()){
 					//StringBuffer后面追加字符串
 					columns.append(rs2.getString(2) + ",");
@@ -62,7 +62,7 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 				Journal.writeLog("substring后的表为：" + tableName.substring(0,tableName.length() - 5));
 
 				sql_columns = "PRAGMA table_info([" + tableName.substring(0,tableName.length() - 5) + "])";
-				ResultSet rs2 = dd.doQuery(sql_columns);
+				ResultSet rs2 = dd.doQuery(sql_columns,true);
 				//记录指针移到第二行
 				rs2.absolute(2);
 				while(rs2.next()){

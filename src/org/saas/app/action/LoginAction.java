@@ -32,7 +32,7 @@ public class LoginAction extends ActionSupport{
 		DbDao dd = new DbDao();
 		String sql = "select count(*) as amount from tbl_saas_emp where userName = ? and password = ? ";
 		//执行查询
-		ResultSet rs = dd.doQuery(sql,getUsername(),getPassword());
+		ResultSet rs = dd.doQuery(sql,false,getUsername(),getPassword());
 
 		//获取ActionContext
 		ActionContext ctx = ActionContext.getContext();
