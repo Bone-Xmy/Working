@@ -15,6 +15,8 @@ import org.saas.app.Tools.MyDir;
 import org.saas.app.Tools.Journal;
 
 public class UploadAction extends ActionSupport{
+	//封装文件上传地址的成员变量
+	private String uploadDir;
 	//封装文件标题请求参数的成员变量
 	private String title;
 	//封装上传文件域的成员变量
@@ -32,6 +34,13 @@ public class UploadAction extends ActionSupport{
 	//获取上传文件的保存位置
 	private String getSavePath() throws Exception{
 		return ServletActionContext.getServletContext().getRealPath(savePath);
+	}
+	//uploadDir的setter和getter方法
+	public String getUploadDir(){
+		if(uploadDir == null){
+			uploadDir = new MyDir().getDir();
+		}
+		return uploadDir;
 	}
 	//title的setter和getter方法
 	public void setTitle(String title){
@@ -69,10 +78,12 @@ public class UploadAction extends ActionSupport{
 		//获取ActionContext
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> session = ctx.getSession();
-		//上传到的目录
-		String uploadDir;
-		String uploadedFile;
-
+		
+		//上传到的文件名
+		String uploadedFile = getUploadDir() + "/" + getUploadFileName();
+		Journal.writeLog("uploadAction 获取到的uploadFile为：" + uploadedFile);
+ 
+		/*
 		if((String)session.get("uploadDir") != null){
 			//hlldata和foodLst可能上传到同一个路径，也可能不同，暂时不考虑
 			Journal.writeLog("session信息为：" + (String)session.get("uploadDir"));
@@ -84,7 +95,7 @@ public class UploadAction extends ActionSupport{
 			////FileOutputStream fos = new FileOutputStream(getSavePath() + "\\" + getUploadFileName());
 			uploadDir = new MyDir().getDir();
 			uploadedFile = uploadDir + "/" + getUploadFileName();
-		}
+		} */
 		FileOutputStream fos = new FileOutputStream(uploadedFile);
 		FileInputStream fis = new FileInputStream(getUpload());
 		byte[] buffer = new byte[1024];
@@ -93,7 +104,7 @@ public class UploadAction extends ActionSupport{
 			while((len = fis.read(buffer)) > 0){
 				fos.write(buffer,0,len);
 			}
-
+			/*
 			if(getUploadFileName().startsWith("hll")){
 				Journal.writeLog("上传成功！");
 				session.put("uploadDir",uploadDir);
@@ -101,7 +112,7 @@ public class UploadAction extends ActionSupport{
 			}
 			else if(getUploadFileName().startsWith("Food")){
 				session.put("uploadedFoodLst",uploadDir);
-			}
+			}*/
 
 			return SUCCESS;
 		}

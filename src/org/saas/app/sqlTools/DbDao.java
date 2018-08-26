@@ -1,6 +1,7 @@
 package org.saas.app.sqlTools;
 
 import org.saas.app.Tools.Journal;
+import org.saas.app.Tools.MyDir;
 
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
@@ -11,10 +12,17 @@ import java.util.*;
 public class DbDao{
 	private Connection conn;
 	private String sqlFile;
+	private String uploadDir;
 
 	public DbDao(){
 	}
 	
+	public String getUploadDir(){
+		if(uploadDir == null){
+			uploadDir = new MyDir().getDir();
+		}
+		return uploadDir;
+	}
 	//sqlFile的getter方法
 	public String getSqlFile(){
 		//获取ActionContext
@@ -25,10 +33,10 @@ public class DbDao{
 		Journal.writeLog("uploadDir" + (String)session.get("uploadDir"));
 
 		
-		if(((String)session.get("user")) != null && ((String)session.get("uploadDir")) != null){
-			Journal.writeLog("连接文件：" + (String)session.get("uploadDir") + "\\hlldata.dll");
-			return (String)session.get("uploadDir") + "\\hlldata.dll";
-			
+		if(((String)session.get("user")) != null){
+			//Journal.writeLog("连接文件：" + (String)session.get("uploadDir") + "\\hlldata.dll");
+			//return (String)session.get("uploadDir") + "\\hlldata.dll";
+			return getUploadDir() + "\\hlldata.dll";
 		}
 		else{
 			if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){

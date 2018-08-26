@@ -62,9 +62,12 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 				Journal.writeLog("substring后的表为：" + tableName.substring(0,tableName.length() - 5));
 
 				sql_columns = "PRAGMA table_info([" + tableName.substring(0,tableName.length() - 5) + "])";
-				ResultSet rs2 = dd.doQuery(sql_columns,true);
+				//由于sqlite不支持可滚动的结果集，所以只能为false
+				ResultSet rs2 = dd.doQuery(sql_columns,false);
 				//记录指针移到第二行
-				rs2.absolute(2);
+				//rs2.absolute(2);
+				//通过执行一次next()方法，将记录指针移到下一行，即过滤主键
+				rs2.next();
 				while(rs2.next()){
 					columns.append(rs2.getString(2) + ",");
 				}
