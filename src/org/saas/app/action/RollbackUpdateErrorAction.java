@@ -11,7 +11,8 @@ import java.util.ArrayList;
 public class RollbackUpdateErrorAction extends ActionSupport{
 	public String execute() throws Exception{
 		//保存targetSqls的List
-		ArrayList<String> sqls = new ArrayList<>();
+		ArrayList<String> inSqls = new ArrayList<>();
+		ArrayList<String> dropSqls = new ArrayList<>();
 		DbDao dd = new DbDao();
 		String sql_tables = "select name from sqlite_master where type='table' order by name;";
 		String sql_columns = "PRAGMA table_info([?])";
@@ -41,21 +42,28 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 					+ "("
 					+ tempColumns
 					+ ")"
-					+ "select" 
+					+ " select " 
 					+ tempColumns
-					+ "from"
+					+ " from "
 					+ tableName;
-				String tempDrop = "drop table" + tableName;
+				String tempDrop = "drop table " + tableName;
 
-				Journal.writeLog("SQl:" + tempInsert);
-				Journal.writeLog("SQl:" + tempDrop);
+				//Journal.writeLog("SQl:" + tempInsert);
+				//Journal.writeLog("SQl:" + tempDrop);
 
-				sqls.add(tempInsert);
-				sqls.add(tempDrop);
+				inSqls.add(tempInsert);
+				dropSqls.add(tempDrop);
+				//sqlite不支持这种一个表在select还没有完成的时候执行drop操作：https://www.sqlite.org/cvstrac/wiki?p=DatabaseIsLocked
+				//故改为每次都执行一次update，相当于放弃了事物
+				//rs1还引用了被drop的表
+				//sqls.add(tempInsert);
+				//dd.batchProcessSqls(sqls);
+				//sqls.clear();
 
-				dd.batchProcessSqls(sqls);
+				//sqls.add(tempDrop);
+				//dd.batchProcessSqls(sqls);
 				//只能在执行完成后再执行clear()
-				sqls.clear();
+				//sqls.clear();
 			}
 			else if(tableName.endsWith("temp")){
 
@@ -78,20 +86,33 @@ public class RollbackUpdateErrorAction extends ActionSupport{
 					+ "("
 					+ tempColumns
 					+ ")"
-					+ "select" 
+					+ " select " 
 					+ tempColumns
-					+ "from"
+					+ " from "
 					+ tableName;
-				String tempDrop = "drop table" + tableName;
+				String tempDrop = "drop table " + tableName;
 
-				sqls.add(tempInsert);
-				sqls.add(tempDrop);
+				//Journal.writeLog("插入：SQl:" + tempInsert);
+				//Journal.writeLog("删除：SQl:" + tempDrop);
 
-				dd.batchProcessSqls(sqls);
-				//只能在执行完成后再执行clear()
-				sqls.clear();
+				inSqls.add(tempInsert);
+				dropSqls.add(tempDrop);
+				//sqls.add(tempInsert);
+				//dd.batchProcessSqls(sqls);
+				//sqls.clear();
+
+				//sqls.add(tempDrop);
+				//dd.batchProcessSqls(sqls);
+				////只能在执行完成后再执行clear()
+				//sqls.clear();
 			}
 		}
+		Journal.writeLog("需要执行的Sql:" + inSqls);
+		dd.batchProcessSqls(inSqls);
+		inSqls.clear();
+		Journal.writeLog("需要执行的Sql:" + dropSqls);
+		dd.batchProcessSqls(dropSqls);
+		dropSqls.clear();
 		dd.closeConn();
 		return SUCCESS;
 	}
