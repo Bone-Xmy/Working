@@ -20,11 +20,11 @@ public class UploadAction extends ActionSupport{
 	//封装文件标题请求参数的成员变量
 	private String title;
 	//封装上传文件域的成员变量
-	private File upload;
+	private File[] upload;
 	//封装上传文件类型的成员变量
-	private String uploadContentType;
+	private String[] uploadContentType;
 	//封装上传文件名的属性
-	private String uploadFileName;
+	private String[] uploadFileName;
 	//直接在struts.xml文件配置值的方法
 	private String savePath;
 	//接受struts.xml文件配置的方法
@@ -50,38 +50,89 @@ public class UploadAction extends ActionSupport{
 		return (this.title);
 	}
 	//upload的setter和getter方法
-	public void setUpload(File upload){
+	public void setUpload(File[] upload){
 		this.upload = upload;
 	}
-	public File getUpload(){
+	public File[] getUpload(){
 		return (this.upload);
 	}
 	//uploadContentType的setter和getter方法
-	public void setUploadContentType(String uploadContentType){
+	public void setUploadContentType(String[] uploadContentType){
 		this.uploadContentType = uploadContentType;
 	}
-	public String getUploadContentType(){
+	public String[] getUploadContentType(){
 		return (this.uploadContentType);
 	}
 	//uploadFileName的setter和getter方法
-	public void setUploadFileName(String uploadFileName){
+	public void setUploadFileName(String[] uploadFileName){
 		this.uploadFileName = uploadFileName;
 	}
-	public String getUploadFileName(){
+	public String[] getUploadFileName(){
 		return (this.uploadFileName);
+	}
+
+	//上传文件的方法
+	public String uploadBatch() throws Exception{
+		Journal.writeLog("uploadFileName 的length为：" + uploadFileName.length);
+		for(int i = 0; i < uploadFileName.length; i++){
+			Journal.writeLog("uploadBatch上传的文件为：" + uploadFileName[i]);
+			Journal.writeLog("uploadBatch上传的fis为：" + upload[i]);
+			//上传到的文件名
+			String uploadedFile = getUploadDir() + "/" + uploadFileName[i];
+			Journal.writeLog("uploadBatch上传的fos为：" + uploadedFile);
+			FileOutputStream fos = new FileOutputStream(uploadedFile);
+			FileInputStream fis = new FileInputStream(upload[i]);
+
+			byte[] buffer = new byte[1024];
+			int len = 0;
+
+			try{
+				while((len = fis.read(buffer)) > 0){
+					fos.write(buffer,0,len);
+				}
+
+				/*
+				//获取ActionContext
+				ActionContext ctx = ActionContext.getContext();
+				Map<String,Object> session = ctx.getSession();
+
+				if(uploadFileName[i].startsWith("hll")){
+					Journal.writeLog("上传成功！");
+					session.put("uploadDir",uploadDir);
+					Journal.writeLog("上传后的session为：" + (String)session.get("uploadDir"));
+				}
+				else if(uploadFileName[i].endsWith("Food")){
+					session.put("uploadedFoodLst",uploadDir);
+				}*/	
+			}
+			catch (Exception e){
+				e.printStackTrace();
+				return ERROR;
+			}
+			finally{
+				if(fos != null){
+					fos.flush();
+					fos.close();
+				}
+				if(fis != null){
+					fis.close();
+				}
+			}
+		}
+		return SUCCESS;
 	}
 
 	@Override
 	public String execute() throws Exception{
+
 		//如何保证三个文件上传到同一个路径下呢？（session里面获取uploaded的value?）
 
 		//获取ActionContext
-		ActionContext ctx = ActionContext.getContext();
-		Map<String,Object> session = ctx.getSession();
+		//ActionContext ctx = ActionContext.getContext();
+		//Map<String,Object> session = ctx.getSession();
 		
-		//上传到的文件名
-		String uploadedFile = getUploadDir() + "/" + getUploadFileName();
-		Journal.writeLog("uploadAction 获取到的uploadFile为：" + uploadedFile);
+		
+		//Journal.writeLog("uploadAction 获取到的uploadFile为：" + uploadedFile);
  
 		/*
 		if((String)session.get("uploadDir") != null){
@@ -96,30 +147,23 @@ public class UploadAction extends ActionSupport{
 			uploadDir = new MyDir().getDir();
 			uploadedFile = uploadDir + "/" + getUploadFileName();
 		} */
-		FileOutputStream fos = new FileOutputStream(uploadedFile);
-		FileInputStream fis = new FileInputStream(getUpload());
-		byte[] buffer = new byte[1024];
-		int len = 0;
-		try{
-			while((len = fis.read(buffer)) > 0){
-				fos.write(buffer,0,len);
-			}
-			/*
-			if(getUploadFileName().startsWith("hll")){
-				Journal.writeLog("上传成功！");
-				session.put("uploadDir",uploadDir);
-				Journal.writeLog("上传后的session为：" + (String)session.get("uploadDir"));
-			}
-			else if(getUploadFileName().startsWith("Food")){
-				session.put("uploadedFoodLst",uploadDir);
-			}*/
+		//FileOutputStream fos = new FileOutputStream(uploadedFile);
+		//FileInputStream fis = new FileInputStream(getUpload());
+		//byte[] buffer = new byte[1024];
+		//int len = 0;
+		//try{
+			//while((len = fis.read(buffer)) > 0){
+				//fos.write(buffer,0,len);
+			//}
+			
+			
 
-			return SUCCESS;
-		}
-		catch (Exception e){
-			e.printStackTrace();
-			return ERROR;
-		}
+			return this.uploadBatch();
+		//}
+		//catch (Exception e){
+			//e.printStackTrace();
+			//return ERROR;
+		//}
 		
 	}
 }

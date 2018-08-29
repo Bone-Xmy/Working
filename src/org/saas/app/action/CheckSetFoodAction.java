@@ -16,14 +16,23 @@ import com.google.gson.JsonSyntaxException;
 import java.util.*;
 
 import org.saas.app.Tools.Journal;
+import org.saas.app.Tools.MyDir;
 
 public class CheckSetFoodAction extends ActionSupport{
+	private String uploadDir;
 	//List<String> titleList = new ArrayList<>(); //表头直接在jsp里面通过list实现
 	List<List<String>> foodDetailList = new ArrayList<>();
 
 	//public List<String> getTitleList(){
 	//	return titleList;
 	//}
+	public String getUploadDir(){
+		if(uploadDir == null){
+			uploadDir = new MyDir().getDir();
+		}
+		return uploadDir;
+	}
+
 	public List<List<String>> getFoodDetailList(){
 		return foodDetailList;
 	}
@@ -36,9 +45,10 @@ public class CheckSetFoodAction extends ActionSupport{
 		try{
 			//for windows 
 			//JsonObject json = (JsonObject)parse.parse(new FileReader("F:\\Study\\SaaS\\saasJson\\0725\\src\\foodLst.cdata"));
-			ActionContext ctx = ActionContext.getContext();
-			Map<String,Object> session = ctx.getSession();
-			String foodFile = (String)session.get("uploadedFoodLst") + "/" +"foodLst.cdata";
+			//ActionContext ctx = ActionContext.getContext();
+			//Map<String,Object> session = ctx.getSession();
+			//String foodFile = (String)session.get("uploadedFoodLst") + "/" +"foodLst.cdata";
+			String foodFile = getUploadDir() + "\\" +"foodLst.cdata";
 			Journal.writeLog("CheckSetFood的数据文件是： ==> " + foodFile);
 			JsonObject json = (JsonObject)parse.parse(new FileReader(foodFile));
 			

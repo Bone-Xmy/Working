@@ -26,17 +26,29 @@
 		<!-- 定义一个名为pageDispatch的Action,其实现类为org.saas.app.action.PageDispatchAction，为了显示第一页 -->
 		<action name="pageDispatch" class="org.saas.app.action.PageDispatchAction">
 			<result>/WEB-INF/content/welcome.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 		<action name="getSecondPage" class="org.saas.app.action.PageDispatchAction" method="getSecondPage">
 			<result name="input">/WEB-INF/content/exHanding.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 		<!-- 定义一个名为exceptionHanding的Action，其实现类为org.saas.app.action.ExceptionHandingAction -->
 		<action name="exceptionHanding" class="org.saas.app.action.ExceptionHandingAction">
 			<result>/WEB-INF/content/exHanding.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 		<!-- 定义一个名为rollbackUpdateError的Action，其实现类为org.saas.app.action.RollbackUpdateErrorAction -->
 		<action name="rollbackUpdateError" class="org.saas.app.action.RollbackUpdateErrorAction">
 			<result>/WEB-INF/content/rollbackSuccess.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 		<!-- 定义一个名为showReports的Action，其实现类为为org.saas.app.action.showReportsAction -->
 		<action name="showReports" class="org.saas.app.action.ShowReportsAction">
@@ -58,9 +70,15 @@
 		<!-- 定义一个名为checkoutSetFood的action -->
 		<action name="checkSetFood" class="org.saas.app.action.CheckSetFoodAction">
 			<result>/WEB-INF/content/checkSetFood.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 		<action name="*">
 			<result>/WEB-INF/content/{1}.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+			<!-- 应用自定义拦截器 -->
+			<interceptor-ref name="authority"/>
 		</action>
 	</package>
 </struts>
