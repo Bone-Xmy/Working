@@ -16,6 +16,8 @@ public class MyDir{
 		ActionContext ctx = ActionContext.getContext();
 		Map<String,Object> session = ctx.getSession();
 
+		Journal.writeLog("MyDir里面获取到的user的session信息为：" + session.get("user"));
+
 		//获取配置的entType
 		if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){
 			//在/Users/bone/myWork/source/下创建一个以UUID为名称的文件,此时只有File对象，不会创建文件

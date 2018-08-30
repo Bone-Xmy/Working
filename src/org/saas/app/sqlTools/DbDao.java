@@ -36,7 +36,7 @@ public class DbDao{
 		if(((String)session.get("user")) != null){
 			//Journal.writeLog("连接文件：" + (String)session.get("uploadDir") + "\\hlldata.dll");
 			//return (String)session.get("uploadDir") + "\\hlldata.dll";
-			return getUploadDir() + "\\hlldata.dll";
+			return getUploadDir() + "/hlldata.dll";
 		}
 		else{
 			if(ServletActionContext.getServletContext().getInitParameter("envType").equals("mac")){
@@ -55,6 +55,7 @@ public class DbDao{
 		if(conn == null){
 			Class.forName("org.sqlite.JDBC");
 			String connSQLFile = "jdbc:sqlite:" + getSqlFile();
+			Journal.writeLog("连接的文件为：" + connSQLFile);
 			conn = DriverManager.getConnection(connSQLFile);
 		}
 		return conn;

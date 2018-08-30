@@ -48,7 +48,7 @@ public class CheckSetFoodAction extends ActionSupport{
 			//ActionContext ctx = ActionContext.getContext();
 			//Map<String,Object> session = ctx.getSession();
 			//String foodFile = (String)session.get("uploadedFoodLst") + "/" +"foodLst.cdata";
-			String foodFile = getUploadDir() + "\\" +"foodLst.cdata";
+			String foodFile = getUploadDir() + "/" +"FoodLst.cdata";
 			Journal.writeLog("CheckSetFood的数据文件是： ==> " + foodFile);
 			JsonObject json = (JsonObject)parse.parse(new FileReader(foodFile));
 			
