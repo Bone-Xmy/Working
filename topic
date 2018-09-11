@@ -22,6 +22,9 @@
 
 9.import org.saas.app.sqlTools.DbDao; 之后就不用在new了，直接用DbDao调用方法，是怎么理解的？
 	错误：只有静态（static）的方法才可以直接使用类来调用，不需要new，如果不是则需要new创建对象，再调用
+10.extends接口和extend类有什么区别？
+
+11.MyBatis的new SQL(){{}}方法的理解？
 
 
 	
